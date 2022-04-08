@@ -34,7 +34,7 @@ def predict(path_image):
     print('> {}'.format(path_image))
     #convert image to unint8
     res = (res * 255).astype(np.uint8)
-    imageio.imwrite('./output.jpg', res)
+    imageio.imwrite('./static/output.jpg', res)
 
 
 if __name__ == '__main__':

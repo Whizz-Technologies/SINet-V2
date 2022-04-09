@@ -11,7 +11,7 @@ app.secret_key = 'belatrix'
 SAVED_FOLDER = 'static'
 app.config['SAVED_FOLDER'] = SAVED_FOLDER
 
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+ALLOWED_EXTENSIONS = set(['png', 'webp', 'jfif', 'jpg', 'jpeg'])
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS

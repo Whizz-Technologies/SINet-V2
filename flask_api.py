@@ -40,13 +40,19 @@ def get_object_detection():
         print(path_image)
         predict(path_image)
         st = './static/output.jpg'
+        ts = './static/output_contour.jpg'
         # print(st)
-        return render_template('index.html', filename=st)
+        return render_template('index.html', filename=st, filename2=ts)
         
 @app.route('/<filename>')
 def display_image(filename):
     #print('display_image filename: ' + filename)
     return redirect(url_for('static', filename='./' + filename), code=301)
+
+@app.route('/<filename2>')
+def display_image2(filename2):
+    #print('display_image filename: ' + filename)
+    return redirect(url_for('static', filename='./' + filename2), code=301)
 
 
 

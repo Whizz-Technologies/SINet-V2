@@ -28,6 +28,8 @@ def predict(path_image):
     img = img.cuda()
 
     orig_img = cv2.imread(path_image)
+    #resize original image to 640 480
+    orig_img = cv2.resize(orig_img, (640, 480))
     res5, res4, res3, res2 = model(img)
     res = res2
     res = F.upsample(res, size=352, mode='bilinear', align_corners=False)
@@ -37,18 +39,18 @@ def predict(path_image):
     #convert image to unint8
     res = (res * 255).astype(np.uint8)
     res = cv2.resize(res, (orig_img.shape[1], orig_img.shape[0]))
-    imageio.imwrite('./output.jpg', res)
+    imageio.imwrite('./static/output.jpg', res)
     #find contour in res
     ret, thresh = cv2.threshold(res, 100, 255, 0)
     contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     #plot contours
-    cv2.drawContours(orig_img, contours, -1, (0, 255, 0), 3)
-    cv2.imshow("Contours", orig_img)
-    cv2.waitKey(0)
+    overlayed = cv2.drawContours(orig_img, contours, -1, (0, 255, 0), 3)
+    cv2.imwrite('./static/output_contour.jpg', overlayed)
     #plt.imshow(cv2.cvtColor(orig_img, cv2.COLOR_BGR2RGB))
     #plt.imshow(res, alpha=0.5) 
     #plt.show()
 
+    
 
 
 if __name__ == '__main__':

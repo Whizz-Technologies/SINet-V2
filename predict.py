@@ -8,8 +8,9 @@ from lib.Network_Res2Net_GRA_NCD import Network
 import imageio
 from PIL import Image
 import torchvision.transforms as transforms
+#from matplotlib import pyplot as plt
 
-path_image = './animal-1.jpg'
+path_image = './32.jpg'
 
 def predict(path_image):
     path_ckpt = './Net_epoch_best.pth'
@@ -26,6 +27,7 @@ def predict(path_image):
     img = img_transform(img).unsqueeze(0)
     img = img.cuda()
 
+    orig_img = cv2.imread(path_image)
     res5, res4, res3, res2 = model(img)
     res = res2
     res = F.upsample(res, size=352, mode='bilinear', align_corners=False)
@@ -34,9 +36,21 @@ def predict(path_image):
     print('> {}'.format(path_image))
     #convert image to unint8
     res = (res * 255).astype(np.uint8)
+    res = cv2.resize(res, (orig_img.shape[1], orig_img.shape[0]))
     imageio.imwrite('./output.jpg', res)
+    #find contour in res
+    ret, thresh = cv2.threshold(res, 100, 255, 0)
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    #plot contours
+    cv2.drawContours(orig_img, contours, -1, (0, 255, 0), 3)
+    cv2.imshow("Contours", orig_img)
+    cv2.waitKey(0)
+    #plt.imshow(cv2.cvtColor(orig_img, cv2.COLOR_BGR2RGB))
+    #plt.imshow(res, alpha=0.5) 
+    #plt.show()
+
 
 
 if __name__ == '__main__':
-    path_image = './animal-1.jpg'
+    path_image = './32.jpg'
     predict(path_image)

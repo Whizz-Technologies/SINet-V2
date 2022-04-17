@@ -18,8 +18,7 @@ def predict(path_image):
     model.load_state_dict(torch.load(path_ckpt))
     model.cuda()
     model.eval()
-    img = Image.open(path_image)
-    img.convert('RGB')
+    img = Image.open(path_image).convert('RGB')
     img_transform = transforms.Compose([
                 transforms.Resize((352, 352)),
                 transforms.ToTensor(),

@@ -1,14 +1,29 @@
 <html>
 <head>
-<title>Concealed Object Detection</title>
+<style>
+    .column {
+        float: left;
+        width: 33.33%;
+        padding: 5px;
+      }
+      
+@media screen and (max-width: 500px) {
+    .column {
+        width: 100%;
+        }
+    }
+</style>
+<title>Elusive.ai</title>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />        
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
 </head>
 <body>
-<p><h1 align="center">Concealed Object Detection</h1></p>
+<p><h1 align="center">Elusive Camo AI Detection</h1></p>
 <div class="container">
 <div class="row">
     <h2>Upload the image</h2>
+    <br />
     <p>
         {% with messages = get_flashed_messages() %}
           {% if messages %}
@@ -21,18 +36,26 @@
         {% endwith %}
     </p>
     {% if filename %}
-        <div>
-            <img src="{{ url_for('display_image', filename=filename) }}">
+        <div class="row">
+            <div class="column">
+                <img src="{{ url_for('display_image', filename=filename) }}" style="width:100%">
+                <br />
+            </div>
+            <div class="column">
+                <img src="{{ url_for('display_image2', filename2=filename2) }}" style="width:100%">
+            </div>
         </div>
     {% endif %}
     <form method="post" action="/image" enctype="multipart/form-data">
         <dl>
             <p>
+                <br />
                 <input type="file" name="file" class="form-control" autocomplete="off" required>
             </p>
         </dl>
         <p>
             <input type="submit" value="Submit" class="btn btn-info">
+            <br />
         </p>
     </form>
 </div>

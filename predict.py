@@ -10,7 +10,7 @@ from PIL import Image
 import torchvision.transforms as transforms
 #from matplotlib import pyplot as plt
 
-path_image = './32.jpg'
+path_image = './animal-1.jpg'
 
 def predict(path_image):
     path_ckpt = './Net_epoch_best.pth'
@@ -53,5 +53,5 @@ def predict(path_image):
 
 
 if __name__ == '__main__':
-    path_image = './32.jpg'
+    path_image = 'animal-1.jpg'
     predict(path_image)

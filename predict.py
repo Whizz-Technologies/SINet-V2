@@ -33,6 +33,8 @@ def predict(folder_path):
     currentDateAndTime = datetime.now()
     final_output_folder_name = './output/' + currentDateAndTime.strftime('%Y-%m-%d_%H-%M-%S') +'/'
     os.mkdir(final_output_folder_name)
+    first_one = True
+    final_image = None
     for file in os.listdir(input_folder):
         path = input_folder + '/' + file
         output_save_path = output_folder + '/' + file
@@ -67,7 +69,22 @@ def predict(folder_path):
         #plt.imshow(cv2.cvtColor(orig_img, cv2.COLOR_BGR2RGB))
         #plt.imshow(res, alpha=0.5) 
         #plt.show()
-   
+        #make res three channel
+        res = cv2.cvtColor(res, cv2.COLOR_GRAY2RGB)
+        #concat image column wise
+        img_concat = np.concatenate((res, overlayed), axis=1)
+        #write filename in img_concat
+        cv2.putText(img_concat, file, (0, 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        if(first_one):
+            first_one = False
+            final_image = img_concat
+
+        else:
+            final_image = np.concatenate((final_image, img_concat), axis=0)
+    
+    #write the final image
+    final_image_save_path = folder_path + '/' + 'final_image.jpg'
+    cv2.imwrite(final_image_save_path, final_image)
     #copy(output_folder, final_output_folder_name)
     #copy(input_folder, final_output_folder_name)
         

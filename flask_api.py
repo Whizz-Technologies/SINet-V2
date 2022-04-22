@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 app.secret_key = 'belatrix'
 
-SAVED_FOLDER = 'static'
+SAVED_FOLDER = 'static/uploads/input'
 app.config['SAVED_FOLDER'] = SAVED_FOLDER
 
 ALLOWED_EXTENSIONS = set(['png', 'webp', 'jfif', 'jpg', 'jpeg'])
@@ -23,37 +23,34 @@ def home():
 
 @app.route('/image', methods=['POST'])
 def get_object_detection():
-    path = './static/'
-    for v in os.listdir(path):
-        os.remove(os.path.join(path, v))
-    if 'file' not in request.files:
+    path1 = './static/uploads/input/'
+    path2 = './static/uploads/output/'
+    for v in os.listdir(path1):
+        os.remove(os.path.join(path1, v))
+    for s in os.listdir(path2):
+        os.remove(os.path.join(path2, s))
+    if 'files[]' not in request.files:
             flash('No file part')
             return redirect(request.url)
-    file = request.files['file']
-    if file.filename == '':
-        flash('No selected file')
-        return redirect(request.url)
-    if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['SAVED_FOLDER'], filename))
-        path_image = SAVED_FOLDER + '/' + filename
-        print(path_image)
-        predict(path_image)
-        st = './static/output.jpg'
-        ts = './static/output_contour.jpg'
+    files = request.files.getlist('files[]')
+    file_names = []
+    for file in files:
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_names.append(filename)
+            file.save(os.path.join(app.config['SAVED_FOLDER'], filename))
+        # print(path_image)
+    path_image = './static/uploads'
+    predict(path_image)
+    st = './static/uploads/output/final_image.jpg'
+        # ts = './static/output_contour.jpg'
         # print(st)
-        return render_template('index.html', filename=st, filename2=ts)
+    return render_template('index.html', filename=st)
         
 @app.route('/<filename>')
 def display_image(filename):
     #print('display_image filename: ' + filename)
     return redirect(url_for('static', filename='./' + filename), code=301)
-
-@app.route('/<filename2>')
-def display_image2(filename2):
-    #print('display_image filename: ' + filename)
-    return redirect(url_for('static', filename='./' + filename2), code=301)
-
 
 
 if __name__=='__main__':

@@ -58,7 +58,7 @@ def predict(folder_path):
         #convert image to unint8
         res = (res * 255).astype(np.uint8)
         res = cv2.resize(res, (orig_img.shape[1], orig_img.shape[0]))
-        imageio.imwrite(output_save_path, res)
+        cv2.imwrite(output_save_path, res)
         #find contour in res
         ret, thresh = cv2.threshold(res, 100, 255, 0)
         contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -83,7 +83,7 @@ def predict(folder_path):
             final_image = np.concatenate((final_image, img_concat), axis=0)
     
     #write the final image
-    final_image_save_path = folder_path + '/' + 'final_image.jpg'
+    final_image_save_path = folder_path + '/output/' + 'final_image.jpg'
     cv2.imwrite(final_image_save_path, final_image)
     #copy(output_folder, final_output_folder_name)
     #copy(input_folder, final_output_folder_name)
@@ -91,5 +91,5 @@ def predict(folder_path):
 
 
 if __name__ == '__main__':
-    path_image = './static/'
+    path_image = './static/uploads'
     predict(path_image)

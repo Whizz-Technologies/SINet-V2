@@ -32,7 +32,11 @@ def predict(folder_path):
     output_folder = folder_path + '/' + 'output'
     currentDateAndTime = datetime.now()
     final_output_folder_name = './output/' + currentDateAndTime.strftime('%Y-%m-%d_%H-%M-%S') +'/'
+    final_image_save_path_input = final_output_folder_name + 'input'
+    final_image_save_path_output = final_output_folder_name + 'output'
     os.mkdir(final_output_folder_name)
+    os.mkdir(final_image_save_path_input)
+    os.mkdir(final_image_save_path_output)
     first_one = True
     final_image = None
     for file in os.listdir(input_folder):
@@ -49,6 +53,7 @@ def predict(folder_path):
         orig_img = cv2.imread(path)
         #resize original image to 640 480
         orig_img = cv2.resize(orig_img, (640, 480))
+        cv2.imwrite(final_image_save_path_input + '/' + file, orig_img)
         res5, res4, res3, res2 = model(img)
         res = res2
         res = F.upsample(res, size=352, mode='bilinear', align_corners=False)
@@ -59,6 +64,7 @@ def predict(folder_path):
         res = (res * 255).astype(np.uint8)
         res = cv2.resize(res, (orig_img.shape[1], orig_img.shape[0]))
         cv2.imwrite(output_save_path, res)
+        cv2.imwrite(final_image_save_path_output + '/' + file, res)
         #find contour in res
         ret, thresh = cv2.threshold(res, 100, 255, 0)
         contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
@@ -66,6 +72,7 @@ def predict(folder_path):
         overlayed = cv2.drawContours(orig_img, contours, -1, (0, 255, 0), 3)
         contour_save_path = output_folder + '/' + 'contour_' + file
         cv2.imwrite(contour_save_path, overlayed)
+        cv2.imwrite(final_image_save_path_output + '/' + 'contour_' + file, overlayed)
         #plt.imshow(cv2.cvtColor(orig_img, cv2.COLOR_BGR2RGB))
         #plt.imshow(res, alpha=0.5) 
         #plt.show()
@@ -84,7 +91,9 @@ def predict(folder_path):
     
     #write the final image
     final_image_save_path = folder_path + '/output/' + 'final_image.jpg'
+    final_image_save_path_final = folder_path + '/output/' + 'final_image_final.jpg'
     cv2.imwrite(final_image_save_path, final_image)
+    cv2.imwrite(final_image_save_path_final, final_image)
     #copy(output_folder, final_output_folder_name)
     #copy(input_folder, final_output_folder_name)
         

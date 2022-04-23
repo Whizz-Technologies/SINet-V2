@@ -43,29 +43,6 @@ def get_object_detection():
         # print(path_image)
     path_image = './static/uploads'
     predict(path_image)
-    input_folder = './static/uploads/input'
-    output_folder = './static/uploads/output'
-    currentDateAndTime = datetime.now()
-    final_output_folder_name = './output/' + currentDateAndTime.strftime('%Y-%m-%d_%H-%M-%S') +'/'
-    os.mkdir(final_output_folder_name)
-
-    for file in os.listdir(output_folder):
-        print(os.path.join(output_folder, file))
-        print(os.path.join(final_output_folder_name, file))
-        src_path = os.path.join(output_folder, file)
-        dst_path = os.path.join(final_output_folder_name, file)
-        cmd = "cp " + src_path + " " + dst_path
-        print(cmd)
-        os.system(cmd)
-
-    for file in os.listdir(input_folder):
-        print(os.path.join(input_folder, file))
-        print(os.path.join(final_output_folder_name, file))
-        src_path = os.path.join(input_folder, file)
-        dst_path = os.path.join(final_output_folder_name, file)
-        cmd = "cp " + src_path + " " + dst_path
-        print(cmd)
-        os.system(cmd)
 
     st = './static/uploads/output/final_image.jpg'
         # ts = './static/output_contour.jpg'

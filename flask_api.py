@@ -3,6 +3,8 @@ from werkzeug.utils import secure_filename
 import os
 from datetime import datetime
 from predict import predict
+from scraper import search
+
 
 
 app = Flask(__name__)
@@ -20,6 +22,10 @@ def allowed_file(filename):
 @app.route('/')
 def home():
     return render_template('index.html')
+
+@app.route('/home')
+def home2():
+    return render_template('index2.html')
 
 
 @app.route('/image', methods=['POST'])
@@ -53,6 +59,16 @@ def get_object_detection():
 def display_image(filename):
     #print('display_image filename: ' + filename)
     return redirect(url_for('static', filename='./' + filename), code=301)
+
+@app.route('/down_img', methods=['POST'])
+def get_flickr_img():
+    text = request.form.get("quantity")
+    percent = request.form.get("num")
+    term = str(text)
+    max = int(percent)
+    search(qs=term, qg=None, max_pages=max)
+    flash('Images downloaded!')
+    return render_template('index2.html')
 
 
 if __name__=='__main__':

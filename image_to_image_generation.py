@@ -78,6 +78,34 @@ def overlay(background, img_path, contour, x, y):
     return im
 
 
+def predict(camo_path, pattern_path, background_path):
+
+    #check the file in camo_path
+    if os.listdir(camo_path):
+        print("Camo Image Found")
+        camo_path = camo_path + os.listdir(camo_path)[0]
+
+    if os.listdir(pattern_path):
+        print("Pattern Image Found")
+        pattern_path = pattern_path + os.listdir(pattern_path)[0]
+
+    if os.listdir(background_path):
+        print("Background Image Found")
+        background_path = background_path + os.listdir(background_path)[0]
+
+
+
+    scaling_factor = input("Scaling Factor: ")
+    background = Image.open(background_path).convert("RGBA")
+    scaled_camo = scale_camo_shape(camo_path, float(scaling_factor))
+    #contour = border_extraction(img)
+    img = fill_contour(scaled_camo)
+    #center of img
+    center = (int(img.shape[1]/2), int(img.shape[0]/2))
+
+    return center, background.size, background, img, pattern_path
+    
+
 
 
 
@@ -136,35 +164,11 @@ if __name__ == '__main__':
     background_path = './static/background/'
     overlayed_path = './static/overlayed/'
 
-
-    #check the file in camo_path
-    if os.listdir(camo_path):
-        print("Camo Image Found")
-        camo_path = camo_path + os.listdir(camo_path)[0]
-
-    if os.listdir(pattern_path):
-        print("Pattern Image Found")
-        pattern_path = pattern_path + os.listdir(pattern_path)[0]
-
-    if os.listdir(background_path):
-        print("Background Image Found")
-        background_path = background_path + os.listdir(background_path)[0]
-
-
-
-    scaling_factor = input("Scaling Factor: ")
-    background = Image.open(background_path).convert("RGBA")
-    scaled_camo = scale_camo_shape(camo_path, float(scaling_factor))
-    #contour = border_extraction(img)
-    img = fill_contour(scaled_camo)
-    #center of img
-    center = (int(img.shape[1]/2), int(img.shape[0]/2))
+    center, background_size , background, img, pattern_path = predict(camo_path, pattern_path, background_path)
 
     print("Center of mask: ", center)
-    print("X Cordinate must be less than ", background.size[0], " Y Cordinate must be less than ", background.size[1])
+    print("X Cordinate must be less than ", background_size[0], " Y Cordinate must be less than ", background_size[1])
 
-
-    
     #coordinates for mask
     x = ''
     y = ''
@@ -181,6 +185,9 @@ if __name__ == '__main__':
     #save overlayed image to overlayed folder
     overlayed_image = overlayed_image.convert('RGB')
     overlayed_image.save(overlayed_path + 'overlayed.jpg')
+
+
+
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()

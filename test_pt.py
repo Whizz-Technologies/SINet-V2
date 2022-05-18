@@ -21,8 +21,20 @@ img_transform = transforms.Compose([
                     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
 
 input_tensor = img_transform(input_image)
+print("Input Tensor type",input_tensor.dtype)
 input_batch = input_tensor.unsqueeze(0)
 res5, res4, res3, res2 = model(input_batch)
+
+
+print(type(res5))
+print(res5.shape)
+print(type(res4))
+print(res4.shape)
+print(type(res3))
+print(res3.shape)
+print(type(res2))
+print(res2.shape)
+
 
 #Output Post-Processing
 res = res2

@@ -1,0 +1,46 @@
+<html>
+<head>
+<style>
+    .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 80%;
+        }
+    
+    body {
+        background-image: url('static/back_img/terrain_background.png');
+    }
+</style>
+<title>Image Over Image Generation</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />        
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</head>
+<body>
+<p><h1 align="center">Image Over Image Generation</h1></p>
+<div class="container">
+<div class="row">
+    <!-- <h2>Upload the car image to detect the damage</h2>
+    <p>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </p> -->
+    {% if pic %}
+        <div>
+            <br>
+            <br>
+            <br>
+            <img src="{{ url_for('display_image2', pic=pic) }}" width="80%" class="center">
+        </div>
+    {% endif %}
+</div>
+</div>
+</body>
+</html>

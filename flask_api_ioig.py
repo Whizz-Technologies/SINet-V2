@@ -1,8 +1,9 @@
-from flask import Flask, request, render_template, flash, redirect
+from flask import Flask, request, render_template, flash, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
-from image_to_image_generation import predict
-
+from image_to_image_generation import predict, overlay
+import cv2
+from PIL import Image
 
 app = Flask(__name__)
 
@@ -62,7 +63,42 @@ def get_image_over_image():
     scale_factor = request.form.get("num")
     scale = int(scale_factor)
     center, background_size , background, img, pattern_path = predict(path1, path2, path3, scale)
+    cv2.imwrite('./static/uploads/filled_contour.jpg', img)
     return render_template('center_value.html', cen=center, back=background_size)
+
+@app.route('/centre_value', methods=['POST'])
+def get_centre_value():
+    background_path='./static/uploads/background/'
+    pattern_path='./static/uploads/pattern/'
+    overlayed_path = './static/uploads/overlayed/'
+    image = cv2.imread('./static/uploads/filled_contour.jpg')
+    if os.listdir(background_path):
+        print("Background Image Found")
+        background_path = background_path + os.listdir(background_path)[0]
+        background = Image.open(background_path).convert("RGBA")
+    if os.listdir(pattern_path):
+        print("Pattern Image Found")
+        pattern_path = pattern_path + os.listdir(pattern_path)[0]
+    
+    x_val = request.form.get("x_value")
+    y_val = request.form.get("y_value")
+    if x_val == '' or y_val == '':
+        x_val = 30
+        y_val = 30
+        # ts = './static/output_contour.jpg'
+        # print(st)
+    overlayed_image = overlay(background, pattern_path, image, int(x_val), int(y_val))
+    overlayed_image = overlayed_image.convert('RGB')
+    overlayed_image.save(overlayed_path + 'overlayed.jpg')
+    st = './static/uploads/overlayed/overlayed.jpg'
+    return render_template('over_image.html', pic=st)
+
+@app.route('/<pic>')
+def display_image2(pic):
+    #print('display_image filename: ' + filename)
+    return redirect(url_for('static', pic='./uploads/overlayed/' + pic), code=301)
+
+
 
 
 

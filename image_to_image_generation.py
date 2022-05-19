@@ -166,6 +166,8 @@ if __name__ == '__main__':
     scaling_factor = input("Scaling Factor: ")
 
     center, background_size , background, img, pattern_path = predict(camo_path, pattern_path, background_path, scaling_factor)
+    #save img
+    cv2.imwrite('./static/uploads/filled_contour.jpg', img)
     print(background_size)
     print(background)
     print(img)

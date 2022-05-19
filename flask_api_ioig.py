@@ -98,9 +98,5 @@ def display_image2(pic):
     #print('display_image filename: ' + filename)
     return redirect(url_for('static', pic='./uploads/overlayed/' + pic), code=301)
 
-
-
-
-
 if __name__=='__main__':
     app.run(debug=True)

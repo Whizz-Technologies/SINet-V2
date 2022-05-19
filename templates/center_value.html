@@ -1,0 +1,97 @@
+<html>
+<head>
+<style>
+    h3 {
+      text-align: center;
+    }
+      .form__input {
+        font-family: 'Roboto', sans-serif;
+        color: #333;
+        font-size: 1.5rem;
+          margin: 0 auto;
+        padding: 1.5rem 2rem;
+        border-radius: 0.2rem;
+        background-color: rgb(255, 255, 255);
+        border: none;
+        width: 20%;
+        height: 5%;
+        display: block;
+        border-bottom: 0.3rem solid transparent;
+        transition: all 0.3s;
+      }
+
+      .container {
+        text-align: center;
+      }
+
+      body {
+        background-image: url('static/back_img/terrain_background.png');
+    }
+</style>
+<title>Flickr Image Downloader</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />        
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</head>
+<body>
+<p><h1 align="center">Image Over Image Generation</h1></p>
+<div class="container">
+<div class="row">
+    <div>
+        <div>
+          <br>
+          <br>
+            <h4>Image Over Image Generation</h4>
+        </div>
+    </div>
+    <p>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </p>
+    <form method="post" action="/centre_value" enctype="multipart/form-data">
+        <dl>
+            <p>
+                <div class="container">
+                  <div>
+                    <div>
+                      <div>
+                        <br>
+                        {{ "Center of mask: ", cen }}
+                        <br>
+                        {% if back %}
+                        <br>
+                        {{ "X Cordinate must be less than ", back[0] }}
+                        <br>
+                        <br>
+                        {{ "Y Cordinate must be less than ", back[1] }}
+                        <br>
+                        <br>
+                        {% endif %}
+                        <h4>Enter 'x' co-ordinate</h4>
+                        <br>
+                        <input type="text" id="quantity" name="quantity" class="form__input" placeholder="Enter Query Term"></textarea>
+                        <br>
+                        <h4>Enter 'y' co-ordinate</h4>
+                        <br>
+                        <input type="text" id="num" name="num" class="form__input" placeholder="Enter Page No."/>
+                        <br>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </p>
+        </dl>
+        <p>
+          <div="container">
+            <input type="submit" value="Submit" class="btn btn-info float-center">
+          </div>
+        </div>
+      </div>
+    </body>
+</html>

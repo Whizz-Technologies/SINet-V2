@@ -78,7 +78,7 @@ def overlay(background, img_path, contour, x, y):
     return im
 
 
-def predict(camo_path, pattern_path, background_path):
+def predict(camo_path, pattern_path, background_path, scaling_factor):
 
     #check the file in camo_path
     if os.listdir(camo_path):
@@ -95,7 +95,7 @@ def predict(camo_path, pattern_path, background_path):
 
 
 
-    scaling_factor = input("Scaling Factor: ")
+    
     background = Image.open(background_path).convert("RGBA")
     scaled_camo = scale_camo_shape(camo_path, float(scaling_factor))
     #contour = border_extraction(img)
@@ -159,15 +159,24 @@ if __name__ == '__main__':
     #pattern_path = input("Enter Pattern Image Path: ")
     #background_path = input("Enter Background Image Path: ")
 
-    camo_path = './static/camo_shape/'
-    pattern_path = './static/pattern/'
-    background_path = './static/background/'
-    overlayed_path = './static/overlayed/'
+    camo_path = './static/uploads/camo_shape/'
+    pattern_path = './static/uploads/pattern/'
+    background_path = './static/uploads/background/'
+    overlayed_path = './static/uploads/overlayed/'
+    scaling_factor = input("Scaling Factor: ")
 
-    center, background_size , background, img, pattern_path = predict(camo_path, pattern_path, background_path)
+    center, background_size , background, img, pattern_path = predict(camo_path, pattern_path, background_path, scaling_factor)
+    print(background_size)
+    print(background)
+    print(img)
+    print(pattern_path)
 
     print("Center of mask: ", center)
-    print("X Cordinate must be less than ", background_size[0], " Y Cordinate must be less than ", background_size[1])
+    back=background_size
+    if back:
+        print("X Cordinate must be less than ", background_size[0])
+        print("Y Cordinate must be less than ", background_size[1])
+    # print("X Cordinate must be less than ", background_size[0], " Y Cordinate must be less than ", background_size[1])
 
     #coordinates for mask
     x = ''

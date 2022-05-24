@@ -78,7 +78,7 @@ def overlay(background, img_path, contour, x, y):
     return im
 
 
-def predict(camo_path, pattern_path, background_path, scaling_factor):
+def predict_ioig(camo_path, pattern_path, background_path, scaling_factor):
 
     #check the file in camo_path
     if os.listdir(camo_path):
@@ -165,7 +165,7 @@ if __name__ == '__main__':
     overlayed_path = './static/uploads/overlayed/'
     scaling_factor = input("Scaling Factor: ")
 
-    center, background_size , background, img, pattern_path = predict(camo_path, pattern_path, background_path, scaling_factor)
+    center, background_size , background, img, pattern_path = predict_ioig(camo_path, pattern_path, background_path, scaling_factor)
     #save img
     cv2.imwrite('./static/uploads/filled_contour.jpg', img)
     print(background_size)

@@ -115,7 +115,7 @@ def get_image_over_image():
         filename3 = secure_filename(file3.filename)
         file3.save(os.path.join(app.config['BACK_FOLDER'], filename3))
     scale_factor = request.form.get("num")
-    scale = int(scale_factor)
+    scale = float(scale_factor)
     center, background_size , background, img, pattern_path = predict_ioig(path1, path2, path3, scale)
     cv2.imwrite('./static/uploads/filled_contour.jpg', img)
     return render_template('center_value.html', cen=center, back=background_size)

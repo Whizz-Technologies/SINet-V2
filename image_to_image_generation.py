@@ -21,25 +21,87 @@ def fill_contour(image):
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     #otsu thresholding
     ret, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    #cv2.imshow('thresh', thresh)
-    #cv2.waitKey(0)
+    # cv2.imshow('thresh', thresh)    
+    # cv2.waitKey(0)
     return thresh
 
 
-def overlay(background, img_path, contour, x, y):
-
-
+def overlay(background, scaling_factor, img_path, contour, x, y):
     #background shape
-    background_shape = background.size
+    background_shape_orig = background.size
     #read foreground Image
-    img2 = Image.open(img_path).convert("RGBA").resize(background_shape)
+    #img2 = Image.open(img_path).convert("RGB").resize(background_shape)
+    img2 = Image.open(img_path).convert("RGB")
+    #print img2 shape
+    print(img2.size)
+    #resize img2 to scaling_factor
+    #img2 = img2.resize((int(img2.size[0] * float(scaling_factor)), int(img2.size[1] * float(scaling_factor))))
+    print(img2.size)
+    width_ratio = background_shape_orig[0] / img2.size[0]
+    height_ratio = background_shape_orig[1] / img2.size[1]
+    print("width_ratio: ", width_ratio)
+    print("height_ratio: ", height_ratio)
 
+    #round the ratio to nearest integer
+    width_ratio = int(round(width_ratio))
+    height_ratio = int(round(height_ratio))
 
+    print("width_ratio: ", width_ratio)
+    print("height_ratio: ", height_ratio)
+
+    #height and width
+    height = int(img2.size[1] * height_ratio)
+    width = int(img2.size[0] * width_ratio)
+
+    #resize background to height and width
+    background = background.resize((width, height))
+    new_im = Image.new('RGB', (width, img2.size[1]))
+    new_im2 = Image.new('RGB', (width, height))
+    x_offset = 0
+    for i in range(0, width_ratio):
+        new_im.paste(img2, (x_offset,0))
+        x_offset += img2.size[0]
+
+    y_offset = 0
+    for i in range(0, height_ratio):
+        new_im2.paste(new_im, (0,y_offset))
+        y_offset += new_im.size[1]
+
+    #show the image
+    #new_im2.show()
+    #print(img2.size)
+    img2 = new_im2
+    #print shape of img2
+    #print(img2.size)
+
+    #print background shape
+    #print(background.size)
     #read filled contour
+    background_shape = background.size
+    # #save img2
+    # img2.save("img2.png")
+
+    # #save background
+    # background.save("background.png")
+
+
+    # #read img
+    # img = Image.open("img2.png").convert("RGBA")
+    # #read background
+    # bg = Image.open("background.png").convert("RGBA")
     mask = contour
 
-    #center cordinates of mask
 
+    #normalize x and y
+    widht_ratio_of_bg = background_shape[0] / background_shape_orig[0]
+    height_ratio_of_bg = background_shape[1] / background_shape_orig[1]
+
+    x = int(x * widht_ratio_of_bg)
+    y = int(y * height_ratio_of_bg)
+
+    print("x: ", x)
+    print("y: ", y)
+    #center cordinates of mask
     mask_shape = mask.shape
 
     mask_center = (int(mask_shape[1]/2), int(mask_shape[0]/2))
@@ -71,6 +133,8 @@ def overlay(background, img_path, contour, x, y):
     #print("Foreground Shape: ", img2.size)
     #paste foreground on background
     im = Image.composite(background, img2, mask)
+    #resize im to background original shape
+    im = im.resize(background_shape_orig)
     #img2.show()
     #mask.show()
     #PIL image show
@@ -192,7 +256,7 @@ if __name__ == '__main__':
         x = center[0]
         y = center[1]
 
-    overlayed_image = overlay(background, pattern_path, img, int(x), int(y))
+    overlayed_image = overlay(background, scaling_factor, pattern_path, img, int(x), int(y))
     #save overlayed image to overlayed folder
     overlayed_image = overlayed_image.convert('RGB')
     overlayed_image.save(overlayed_path + 'overlayed.jpg')

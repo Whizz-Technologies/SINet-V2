@@ -4,8 +4,9 @@ from lib.Network_Res2Net_GRA_NCD import Network
 import torch.nn.functional as F
 import numpy as np
 import cv2
+import time 
 
-
+start_time = time.time()
 path_image = "./COD10K-CAM-1-Aquatic-3-Crab-71.jpg"
 input_image = Image.open(path_image)
 #load .pt model
@@ -60,3 +61,6 @@ overlayed_saved_path = './rr_overlayed.jpg'
 
 #Save Overlayed Image
 cv2.imwrite(overlayed_saved_path, overlayed)
+end_time = time.time()
+
+print("Time taken to generate image: ", end_time - start_time)

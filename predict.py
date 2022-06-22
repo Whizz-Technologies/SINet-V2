@@ -52,9 +52,31 @@ def predict(folder_path):
 
         orig_img = cv2.imread(path)
         #resize original image to 640 480
-        orig_img = cv2.resize(orig_img, (640, 480))
+        #orig_img = cv2.resize(orig_img, (640, 480))
         cv2.imwrite(final_image_save_path_input + '/' + file, orig_img)
         res5, res4, res3, res2 = model(img)
+        # print(type(res5))
+        #save res5 res4 res3 res2 into a single image
+        # res5 = F.upsample(res5, size=352, mode='bilinear', align_corners=False)
+        # res4 = F.upsample(res4, size=352, mode='bilinear', align_corners=False)
+        # res3 = F.upsample(res3, size=352, mode='bilinear', align_corners=False)
+        # res2 = F.upsample(res2, size=352, mode='bilinear', align_corners=False)
+        # res5 = res5.sigmoid().data.cpu().numpy().squeeze()
+        # res4 = res4.sigmoid().data.cpu().numpy().squeeze()
+        # res3 = res3.sigmoid().data.cpu().numpy().squeeze()
+        # res2 = res2.sigmoid().data.cpu().numpy().squeeze()
+        # # res5 = (res5 - res5.min()) / (res5.max() - res5.min() + 1e-8)
+        # # res4 = (res4 - res4.min()) / (res4.max() - res4.min() + 1e-8)
+        # # res3 = (res3 - res3.min()) / (res3.max() - res3.min() + 1e-8)
+        # # res2 = (res2 - res2.min()) / (res2.max() - res2.min() + 1e-8)
+        # res5 = np.uint8(res5 * 255)
+        # res4 = np.uint8(res4 * 255)
+        # res3 = np.uint8(res3 * 255)
+        # res2 = np.uint8(res2 * 255)
+        # #stack image vertically using opencv
+        # kk = cv2.vconcat([res5, res4, res3, res2])
+        # #write image to disk
+        # cv2.imwrite("./stack.jpg", kk)
         res = res2
         res = F.upsample(res, size=352, mode='bilinear', align_corners=False)
         res = res.sigmoid().data.cpu().numpy().squeeze()
@@ -100,5 +122,5 @@ def predict(folder_path):
 
 
 if __name__ == '__main__':
-    path_image = './static/uploads'
+    path_image = './static/'
     predict(path_image)

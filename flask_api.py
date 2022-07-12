@@ -115,6 +115,7 @@ def get_image_over_image():
         filename3 = secure_filename(file3.filename)
         file3.save(os.path.join(app.config['BACK_FOLDER'], filename3))
     scale_factor = request.form.get("num")
+    global scale
     scale = float(scale_factor)
     center, background_size , background, img, pattern_path = predict_ioig(path1, path2, path3, scale)
     cv2.imwrite('./static/uploads/filled_contour.jpg', img)
@@ -140,7 +141,7 @@ def get_centre_value():
         y_val = 30
         # ts = './static/output_contour.jpg'
         # print(st)
-    overlayed_image = overlay(background, pattern_path, image, int(x_val), int(y_val))
+    overlayed_image = overlay(background, scale, pattern_path, image, int(x_val), int(y_val))
     overlayed_image = overlayed_image.convert('RGB')
     overlayed_image.save(overlayed_path + 'overlayed.jpg')
     st = './static/uploads/overlayed/overlayed.jpg'

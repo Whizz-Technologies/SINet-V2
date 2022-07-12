@@ -25,30 +25,28 @@ input_tensor = img_transform(input_image)
 print("Input Tensor type",input_tensor.dtype)
 input_batch = input_tensor.unsqueeze(0)
 res5, res4, res3, res2 = model(input_batch)
-
-
-print(type(res5))
-print(res5.shape)
-print(type(res4))
-print(res4.shape)
-print(type(res3))
-print(res3.shape)
-print(type(res2))
-print(res2.shape)
-
-
+# print(res5.shape)
+# print(type(res4))
+# print(res4.shape)
+# print(type(res3))
+# print(res3.shape)
+# print(type(res2))
+# print(res2.shape)
 #Output Post-Processing
 res = res2
 #res = F.upsample(res, size=352, mode='bilinear', align_corners=False)
-res = res.sigmoid().data.cpu().numpy().squeeze()
+#res = res.sigmoid().data.cpu().numpy().squeeze()
+res = res.data.cpu().numpy().squeeze()
 #res = (res - res.min()) / (res.max() - res.min() + 1e-8)
 print('> {}'.format(path_image))
+#shape of res
+print(res.shape)
 #convert image to unint8
-res = (res * 255).astype(np.uint8)
+#res = (res * 255).astype(np.uint8)
 res = cv2.resize(res, (orig_img.shape[1], orig_img.shape[0]))
-
-
-
+z = 1/(1 + np.exp(-res))
+z = (z * 255).astype(np.uint8)
+res = z
 #Save mask
 cv2.imwrite('./rr.jpg', res)
 #find contour in res

@@ -26,9 +26,11 @@ def fill_contour(image):
     return thresh
 
 
-def overlay(background, scaling_factor, img_path, contour, x, y):
+def overlay(background, scaling_factor, img_path, contour, x, y, is_mask=False):
     #background shape
     background_shape_orig = background.size
+
+   
     #read foreground Image
     #img2 = Image.open(img_path).convert("RGB").resize(background_shape)
     img2 = Image.open(img_path).convert("RGB")
@@ -78,6 +80,10 @@ def overlay(background, scaling_factor, img_path, contour, x, y):
     #print(background.size)
     #read filled contour
     background_shape = background.size
+     #make a black image by the size of background
+    black = Image.new('RGBA', background_shape, (0, 0, 0, 0))
+    #make a white image by the size of background
+    white = Image.new('RGBA', background_shape, (255, 255, 255, 255))
     # #save img2
     # img2.save("img2.png")
 
@@ -133,13 +139,24 @@ def overlay(background, scaling_factor, img_path, contour, x, y):
     #print("Foreground Shape: ", img2.size)
     #paste foreground on background
     im = Image.composite(background, img2, mask)
+    im_mask = Image.composite(black, white, mask)
+    #im_mask.show()
+    im_mask = im_mask.resize(background_shape_orig)
+    #convert im_mask to rgb
+    # im_mask = im_mask.convert('RGB')
+    # #save im_mask
+    # im_mask.save('./mask.jpg')
     #resize im to background original shape
     im = im.resize(background_shape_orig)
     #img2.show()
     #mask.show()
     #PIL image show
     #im.show()
-    return im
+    if is_mask == True:
+        return im, im_mask
+
+    else:
+        return im
 
 
 def predict_ioig(camo_path, pattern_path, background_path, scaling_factor):

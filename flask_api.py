@@ -4,6 +4,7 @@ import os
 from predict import predict
 from scraper import search
 from image_to_image_generation import predict_ioig, overlay
+from batch_image_infer_run import run
 import cv2
 from PIL import Image
 
@@ -38,6 +39,10 @@ def home2():
 @app.route('/home_image')
 def home3():
     return render_template('index3.html')
+
+@app.route('/h_kml')
+def home4():
+    return render_template('index4.html')
 
 
 @app.route('/image', methods=['POST'])
@@ -152,6 +157,61 @@ def get_centre_value():
 def display_image2(pic):
     #print('display_image filename: ' + filename)
     return redirect(url_for('static', pic='./uploads/overlayed/' + pic), code=301)
+
+
+@app.route('/kml', methods=['POST'])
+def get_kml():
+    path1='./static/uploads/camo_shape/'
+    path2='./static/uploads/pattern/'
+    path3='./static/uploads/background/'
+    for v in os.listdir(path1):
+        os.remove(os.path.join(path1, v))
+    for s in os.listdir(path2):
+        os.remove(os.path.join(path2, s))
+    for t in os.listdir(path3):
+        os.remove(os.path.join(path3, t))
+    if 'file1' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+    file1 = request.files['file1']
+    if file1 and allowed_file(file1.filename):
+        filename1 = secure_filename(file1.filename)
+        file1.save(os.path.join(app.config['CAMO_FOLDER'], filename1))
+    if 'file2' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+    file2 = request.files['file2']
+    if file2 and allowed_file(file2.filename):
+        filename2 = secure_filename(file2.filename)
+        file2.save(os.path.join(app.config['PATT_FOLDER'], filename2))
+    if 'file3' not in request.files:
+        flash('No file part')
+        return redirect(request.url)
+    file3 = request.files['file3']
+    if file3 and allowed_file(file3.filename):
+        filename3 = secure_filename(file3.filename)
+        file3.save(os.path.join(app.config['BACK_FOLDER'], filename3))
+    
+    number_img = request.form.get("num_img")
+    fold_name = request.form.get("folder_name")
+    folder_name = str(fold_name)
+    num_img = int(number_img)
+    print(num_img)
+    if num_img < 10:
+        num_img = 10
+    else:
+        num_img == num_img
+    print (num_img)
+    value, picture = run(num_img, folder_name, path1, path2, path3)
+    cv2.imwrite('./static/uploads/' + 'combined' + '.jpg', picture)
+    cv2.waitKey(1)
+    stt = './static/uploads/combined.jpg'
+    return render_template('index4.html', value=value, click=stt)
+
+@app.route('/<click>')
+def display_image3(click):
+    #print('display_image filename: ' + filename)
+    return redirect(url_for('static', click='./uploads/' + click), code=301)
 
 
 if __name__=='__main__':

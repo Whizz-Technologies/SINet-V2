@@ -1,0 +1,115 @@
+<html>
+<head>
+<style>
+    h4 {
+        text-align: center;
+      }
+    .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 80%;
+      }
+      .form__input {
+        font-family: 'Roboto', sans-serif;
+        color: #333;
+        font-size: 1.5rem;
+          margin: 0 auto;
+        padding: 1.5rem 2rem;
+        border-radius: 0.2rem;
+        background-color: rgb(255, 255, 255);
+        border: none;
+        width: 20%;
+        height: 5%;
+        text-align: left;
+        display: block;
+        border-bottom: 0.3rem solid transparent;
+        transition: all 0.3s;
+      }
+    
+    body {
+        background-image: url('static/back_img/terrain_background.png');
+    }
+</style>
+<title>Elusive.ai</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />        
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+</head>
+<body>
+<p><h1 align="center">Image Over Image Generation</h1></p>
+<div class="container">
+<div class="row">
+    <br />
+    <br />
+    <h3>Upload Camo Shape</h3>
+    <br />
+    <p>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </p>
+    {% if filename %}
+        <div>
+            <img src="{{ url_for('display_image', filename=filename) }}" width="80%" class="center">
+        </div>
+    {% endif %}
+    <form method="post" action="/kml" enctype="multipart/form-data">
+        <dl>
+            <p>
+                <input type="file" name="file1" class="form-control" autocomplete="off" required>
+                <br />
+                <br />
+                <h3> Upload Pattern </h3> 
+                <br />
+                <input type="file" name="file2" class="form-control" autocomplete="off" required>
+                <br />
+                <br />
+                <h3> Upload Background </h3>
+                <br />
+                <input type="file" name="file3" class="form-control" autocomplete="off" required>
+                <br />
+                <br />
+                <h4>Enter number of images to be generated</h4>
+                <br>
+                <input type="number" id="num" name="num_img" class="form__input" step="1" min="1" placeholder="Enter number"/>
+                <br />
+                <br />
+                <h4>Enter folder name</h4>
+                <br>
+                <input type="text" id="folder" name="folder_name" class="form__input" placeholder="Enter name"/>
+            </p>
+        </dl>
+        <p>
+            <br />
+            <input type="submit" value="Submit" class="btn btn-info">
+            <br />
+            <br />
+            <br />
+            {% if click %}
+                <div>
+                    <br>
+                    <br>
+                    <br>
+                    <img src="{{ url_for('display_image3', click=click) }}" width="70%" class="center">
+                    <br>
+                    <br>
+                   {% for v in value %}
+                   <br />
+                   <p style="font-size:15px;" class="center"> {{ v }} <p/>
+                   <br />
+                   {% endfor %}
+                </div>
+            {% endif %}
+        </p>
+    </form>
+</div>
+</div>
+</body>
+</html>

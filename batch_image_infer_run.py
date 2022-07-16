@@ -6,7 +6,7 @@ def run(number_of_images, folder_name, camo_path, pattern_path, background_path)
     folder_path = './static/uploads/overlayed/' + folder_name
     predict(folder_path)
     y = metric(folder_path)
-    return y,img
+    return y, img
 
 
 if __name__ == '__main__':
@@ -16,10 +16,15 @@ if __name__ == '__main__':
     number_of_images = input("Enter number of images to be generated: ")
     number_of_images = int(number_of_images)
     folder_name = input("Enter folder name: ")
-    value,img = run(number_of_images, folder_name, camo_path, pattern_path, background_path)
+    value, img = run(number_of_images, folder_name, camo_path, pattern_path, background_path)
     print(value)
-    cv2.imshow('image',img)
-    cv2.waitKey(0)
+    print(type(value))
+    cv2.imwrite('./static/uploads/' + 'combined' + '.jpg', img)
+    # cv2.imshow('image',img)
+    for v in value:
+        print(v.key())
+        print(v.value())
+    # cv2.waitKey(0)
 
 
 
